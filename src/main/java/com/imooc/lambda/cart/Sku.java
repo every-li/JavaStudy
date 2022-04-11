@@ -1,4 +1,4 @@
-package lambda.cart;
+package com.imooc.lambda.cart;
 
 /**
  * 下单商品类
