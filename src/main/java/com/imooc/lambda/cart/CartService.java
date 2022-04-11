@@ -49,7 +49,29 @@ public class CartService {
                 }
             };
 
+    /**
+     * 获取商品信息
+     *
+     * @return
+     */
     public static List<Sku> getCartSkuList() {
         return cartSkuList;
+    }
+
+    /**
+     * @Version 1.0.0
+     * 获取购物车中所有电子产品
+     *
+     * @param cartSkuList
+     * @return
+     */
+    public List<Sku> filterElectronicSkus(List<Sku> cartSkuList) {
+        List<Sku> skus = new ArrayList<>();
+        for(Sku sku: cartSkuList){
+            if(sku.getSkuCategory().equals(SkuCategoryEnum.ELECTRONICS)){
+                skus.add(sku);
+            }
+        }
+        return skus;
     }
 }
