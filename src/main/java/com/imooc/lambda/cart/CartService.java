@@ -48,4 +48,8 @@ public class CartService {
                             85.10, SkuCategoryEnum.BOOKS));
                 }
             };
+
+    public static List<Sku> getCartSkuList() {
+        return cartSkuList;
+    }
 }
