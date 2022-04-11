@@ -59,16 +59,34 @@ public class CartService {
     }
 
     /**
-     * @Version 1.0.0
-     * 获取购物车中所有电子产品
-     *
      * @param cartSkuList
      * @return
+     * @Version 1.0.0
+     * 获取购物车中所有电子产品
      */
     public List<Sku> filterElectronicSkus(List<Sku> cartSkuList) {
         List<Sku> skus = new ArrayList<>();
-        for(Sku sku: cartSkuList){
-            if(sku.getSkuCategory().equals(SkuCategoryEnum.ELECTRONICS)){
+        for (Sku sku : cartSkuList) {
+            if (sku.getSkuCategory().equals(SkuCategoryEnum.ELECTRONICS)) {
+                skus.add(sku);
+            }
+        }
+        return skus;
+    }
+
+    /**
+     * @Version 2.0.0
+     * 根据传入商品类型的参数，返回相同商品类型的商品列表
+     *
+     * @param cartSkuList
+     * @param category
+     * @return
+     */
+    public List<Sku> filterSkusByCategory(
+            List<Sku> cartSkuList, SkuCategoryEnum category) {
+        List<Sku> skus = new ArrayList<>();
+        for (Sku sku : cartSkuList) {
+            if (sku.getSkuCategory().equals(category)) {
                 skus.add(sku);
             }
         }
