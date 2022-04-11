@@ -75,12 +75,11 @@ public class CartService {
     }
 
     /**
-     * @Version 2.0.0
-     * 根据传入商品类型的参数，返回相同商品类型的商品列表
-     *
      * @param cartSkuList
      * @param category
      * @return
+     * @Version 2.0.0
+     * 根据传入商品类型的参数，返回相同商品类型的商品列表
      */
     public List<Sku> filterSkusByCategory(
             List<Sku> cartSkuList, SkuCategoryEnum category) {
@@ -94,20 +93,20 @@ public class CartService {
     }
 
     /**
-     * @Version 3.0.0
-     * 支持通过商品类型或总价来过滤商品
      * @param cartSkuList
      * @param category
      * @param totalPrice
      * @param categoryOrPrice - true: 根据商品类型，false: 根据商品总价
      * @return
+     * @Version 3.0.0
+     * 支持通过商品类型或总价来过滤商品
      */
     public static List<Sku> filterSkus(
             List<Sku> cartSkuList, SkuCategoryEnum category,
             Double totalPrice, Boolean categoryOrPrice) {
 
         List<Sku> result = new ArrayList<Sku>();
-        for (Sku sku: cartSkuList) {
+        for (Sku sku : cartSkuList) {
 
             // 如果根据商品类型判断，sku类型与输入类型比较
             // 如果根据商品总价判断，sku总价与输入总价比较
@@ -121,6 +120,25 @@ public class CartService {
             }
         }
         return result;
+    }
+
+    /**
+     * @param cartSkuList
+     * @param predicate   不同的Sku判断标准策略
+     * @return
+     * @Version 4.00
+     * 根据不同的Sku判断标准，对Sku列表进行过滤
+     */
+    public List<Sku> filterSkus(
+            List<Sku> cartSkuList, SkuPredicate predicate) {
+        List<Sku> skus = new ArrayList<>();
+        for (Sku sku : cartSkuList) {
+            // 根据不同的Sku判断策略进行判断
+            if (predicate.test(sku)) {
+                skus.add(sku);
+            }
+        }
+        return skus;
     }
 
 }
