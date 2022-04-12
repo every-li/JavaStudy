@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * 对比原始集合操作和Stream集合操作
@@ -65,7 +67,7 @@ public class StreamVs {
          * Top2
          */
         List<Sku> top2SkuList = new ArrayList<>();
-        for(int i =0 ;i<2;i++){
+        for (int i = 0; i < 2; i++) {
             top2SkuList.add(notBookSkuList.get(i));
         }
 
@@ -73,7 +75,7 @@ public class StreamVs {
          * 求两件商品总价
          */
         Double money = 0.0;
-        for(Sku sku:top2SkuList){
+        for (Sku sku : top2SkuList) {
             money += sku.getTotalPrice();
         }
 
@@ -81,7 +83,7 @@ public class StreamVs {
          * 获取两件商品名称
          */
         List<String> resultSkuNameList = new ArrayList<>();
-        for(Sku sku:top2SkuList){
+        for (Sku sku : top2SkuList) {
             resultSkuNameList.add(sku.getSkuName());
         }
 
@@ -89,13 +91,54 @@ public class StreamVs {
          * 打印结果
          */
         System.out.println(
-                JSON.toJSONString(resultSkuNameList,true)
+                JSON.toJSONString(resultSkuNameList, true)
         );
         System.out.println("商品总价:" + money);
     }
 
     /**
-     * 以Stream流方式实现需求
+     * 利用Stream流方式实现需求
      */
+    @Test
+    public void newCartHandle() {
+        AtomicReference<Double> money = new AtomicReference<>(Double.valueOf(0.0));
 
+        List<String> resultSkuNameList =
+                CartService.getCartSkuList()
+                        .stream()
+                        /**
+                         * 1.打印商品信息
+                         */
+                        .peek(sku -> System.out.println(
+                                JSON.toJSONString(sku, true)))
+                        /**
+                         * 过滤所有图书
+                         */
+                        .filter(sku -> !SkuCategoryEnum.BOOKS.equals(
+                                sku.getSkuCategory()))
+                        /**
+                         * 排序
+                         */
+                        .sorted(Comparator.comparing(Sku::getTotalPrice).reversed())
+                        /**
+                         * Top2
+                         */
+                        .limit(2)
+                        /**
+                         * 累加商品总金额
+                         */
+                        .peek(sku -> money.set(money.get() + sku.getTotalPrice()))
+                        /**
+                         * 获取商品名称
+                         */
+                        .map(Sku::getSkuName)
+                        .collect(Collectors.toList());
+        /**
+         * 打印结果
+         */
+        System.out.println(
+                JSON.toJSONString(resultSkuNameList, true)
+        );
+        System.out.println("商品总价:" + money.get());
+    }
 }
